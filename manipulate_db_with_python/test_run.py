@@ -9,3 +9,8 @@ if __name__ == "__main__":
     """
     result = db.execute_df(query)
     print(result)
+
+# id name
+# 1 yunsik
+# 2 choi
+# ...
