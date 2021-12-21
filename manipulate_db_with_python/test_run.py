@@ -1,16 +1,10 @@
 from database import Database
 
-db = Database(
-        host = '',
-        user = '',
-        password = '',
-        db = '',
-        port = ''
-)
+db = Database(host="", user="", password="", db="", port="")
 
 
 if __name__ == "__main__":
-    query="""
+    query = """
     select * from db.table limit 1
     """
     result = db.execute_df(query)
