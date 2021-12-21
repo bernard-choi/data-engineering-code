@@ -7,7 +7,7 @@ import pandas as pd
 
 
 class Database:
-    def __init__(self, host, user, password, db, port):
+    def __init__(self, host: str, user: str, password: str, db: str, port: str):
         self.host = host
         self.user = user
         self.password = password
@@ -35,7 +35,7 @@ class Database:
             query: A query string that I want to execute.
 
         Returns:
-            str: A Response status.
+            A Response status.
         """
         with self.connect() as conn:
             try:
@@ -52,7 +52,7 @@ class Database:
             query: A query string that I want to execute.
 
         Returns:
-            result table in pandas dataframe after query executed.
+            Result table in pandas dataframe after query executed.
         """
         with self.connect() as conn:
             try:
