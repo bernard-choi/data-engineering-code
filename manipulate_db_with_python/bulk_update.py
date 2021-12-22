@@ -45,9 +45,7 @@ class Bulkupdate(Database):
             if key not in df_col:
                 return "join key not exists"
 
-        list_dict_input = df[df.columns.difference(join_key)].to_dict(
-            orient="records"
-        )
+        list_dict_input = df[df.columns.difference(join_key)].to_dict(orient="records")
         list_dict_condition = df[join_key].to_dict(orient="records")
 
         set_conditions = ",".join(
