@@ -20,7 +20,6 @@ class Bulkupdate(Database):
         self.table = table
 
     def bulk_update_rows(self, json_input: list, join_key: list, create_mode: int = 0):
-
         """Bulk update by creating temp table and join update in SQL.
 
         Args:
