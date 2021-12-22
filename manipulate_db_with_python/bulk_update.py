@@ -5,14 +5,22 @@
 from sqlalchemy import create_engine, text
 import pandas as pd
 
-from database import DataBase
+from .database import Database
 
 
-class BulkUpdate(DataBase):
-    def __init__(self, table, **kwargs):
+class Bulkupdate(Database):
+    def __init__(
+        self, host: str, user: str, password: str, db: str, port: str, table: str
+    ):
+        self.host = host
+        self.user = user
+        self.password = password
+        self.db = db
+        self.port = port
         self.table = table
 
     def bulk_update_rows(self, json_input: list, join_key: list, create_mode: int = 0):
+
         """Bulk update by creating temp table and join update in SQL.
 
         Args:
@@ -21,9 +29,9 @@ class BulkUpdate(DataBase):
                                   {'id': 1, 'column_1': 'value_1', 'column_2': 'value_2'},]
 
             join_key: Join key columns that are needed for join update
-                ex) join_key = ['column1', 'columns2']
+                ex) join_key = ['column1', `'columns2']
 
-            create_mode: An option that stop function(=0) or not(=1) if there if no temp_table
+            create_mode: An option that stop function(=0) or not(=1) if there is no temp_table
 
 
         Returns:
@@ -33,13 +41,14 @@ class BulkUpdate(DataBase):
         df = pd.DataFrame(json_input)
         df_col = df.columns
 
-        if join_key not in df_col:
-            return "join key not exists"
+        for key in join_key:
+            if key not in df_col:
+                return "join key not exists"
 
-        list_dict_input = df[df.columns.difference([join_key])].to_dict(
+        list_dict_input = df[df.columns.difference(join_key)].to_dict(
             orient="records"
         )
-        list_dict_condition = df[[join_key]].to_dict(orient="records")
+        list_dict_condition = df[join_key].to_dict(orient="records")
 
         set_conditions = ",".join(
             [
@@ -47,7 +56,7 @@ class BulkUpdate(DataBase):
                 for key, value in list_dict_input[0].items()
             ]
         )
-        join_conditions = ",".join(
+        join_conditions = " and ".join(
             [
                 "A.{key} = B.{key}".format(key=key)
                 for key, value in list_dict_condition[0].items()
@@ -66,7 +75,7 @@ class BulkUpdate(DataBase):
             join_conditions=join_conditions,
             set_conditions=set_conditions,
         )
-
+        print(join_query)
         with self.connect() as conn:
             try:
                 # transaction
