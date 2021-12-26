@@ -2,7 +2,7 @@
 @author: yunsik choi
 """
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, MetaData
 import pandas as pd
 
 
@@ -27,6 +27,7 @@ class Connection:
         engine = create_engine(db, connect_args=connect_args, pool_recycle=3600)
         conn = engine.connect()
         return conn
+    
 
 
 class Database(Connection):
@@ -108,7 +109,7 @@ class Database(Connection):
         except BaseException as e:
             raise e
 
-    def check_is_table(self, conn, table: str) -> bool:
+    def conn_check_is_table(self, table: str) -> bool:
         """Check if table exists in connected db.
 
         Args:
@@ -117,19 +118,49 @@ class Database(Connection):
         Returns:
             A Boolean value that indicates if table exists or not.
         """
+        with self.connect() as conn:
+            try:
+                meta_data = MetaData(bind=conn, reflect=True)
+                tbl = meta_data.tables['{}'.format(table)]
+                print("table {} exists".format(table))
+                return True
+
+            except BaseException as e:
+                print("table {} doesn't exist".format(table))
+                return False
+
+
+    def check_is_table(self, conn, table: str) -> bool:
+        """Check if table exists in connected db inside connection
+
+        Args:
+            table : Table name that I want to check if exists in database.
+
+        Returns:
+            A Boolean value that indicates if table exists or not.
+        """
         try:
-            query = """
-                    SELECT 1 FROM {schema_name}.{table_name} LIMIT 1
-                    """.format(
-                schema_name=self.db, table_name=table
-            )
-            self.conn_execute_query(conn, query)
+            meta_data = MetaData(bind=conn, reflect=True)
+            tbl = meta_data.tables['{}'.format(table)]
             print("table {} exists".format(self.table))
             return True
 
         except BaseException as e:
             print("table {} doesn't exist".format(self.table))
             return False
+
+    def conn_check_is_table(self, table: str) -> bool:
+        with self.connect() as conn:
+            try:
+                meta_data = MetaData(bind=conn, reflect=True)
+                tbl = meta_data.tables['{}'.format(table)]
+                print("table {} exists".format(table))
+                return True
+
+            except BaseException as e:
+                print("table {} doesn't exist".format(table))
+                return False
+
 
     def delete_all_insert_all(self, df: pd.DataFrame, db: str, table: str) -> bool:
         """Delete all table info and insert pandas dataframe
