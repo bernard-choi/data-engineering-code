@@ -72,7 +72,6 @@ class Bulkupdate(Database):
             join_conditions=join_conditions,
             set_conditions=set_conditions,
         )
-        print(join_query)
         with self.connect() as conn:
             try:
                 # transaction
