@@ -27,7 +27,6 @@ class Connection:
         engine = create_engine(db, connect_args=connect_args, pool_recycle=3600)
         conn = engine.connect()
         return conn
-    
 
 
 class Database(Connection):
@@ -121,14 +120,13 @@ class Database(Connection):
         with self.connect() as conn:
             try:
                 meta_data = MetaData(bind=conn, reflect=True)
-                tbl = meta_data.tables['{}'.format(table)]
+                tbl = meta_data.tables["{}".format(table)]
                 print("table {} exists".format(table))
                 return True
 
             except BaseException as e:
                 print("table {} doesn't exist".format(table))
                 return False
-
 
     def check_is_table(self, conn, table: str) -> bool:
         """Check if table exists in connected db inside connection
@@ -141,7 +139,7 @@ class Database(Connection):
         """
         try:
             meta_data = MetaData(bind=conn, reflect=True)
-            tbl = meta_data.tables['{}'.format(table)]
+            tbl = meta_data.tables["{}".format(table)]
             print("table {} exists".format(self.table))
             return True
 
@@ -153,14 +151,13 @@ class Database(Connection):
         with self.connect() as conn:
             try:
                 meta_data = MetaData(bind=conn, reflect=True)
-                tbl = meta_data.tables['{}'.format(table)]
+                tbl = meta_data.tables["{}".format(table)]
                 print("table {} exists".format(table))
                 return True
 
             except BaseException as e:
                 print("table {} doesn't exist".format(table))
                 return False
-
 
     def delete_all_insert_all(self, df: pd.DataFrame, db: str, table: str) -> bool:
         """Delete all table info and insert pandas dataframe
