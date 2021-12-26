@@ -163,12 +163,12 @@ class Database(Connection):
         """Delete all table info and insert pandas dataframe
 
         Args:
-            df: Data that are going to be inserted 
+            df: Data that are going to be inserted
             table: A target table name
             db: A target database name
 
         Returns:
-             A Response status. 
+             A Response status.
         """
         with self.connect() as conn:
             try:
