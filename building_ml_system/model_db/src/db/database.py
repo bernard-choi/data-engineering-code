@@ -17,6 +17,7 @@ engine = create_engine(
 
 # sessionmaker : 호출되었을 때, 세션을 생성해준다.
 # auticommit : api가 호출되어 DB의 내용이 변경된 경우 자동으로 commit하며 변경할지에 대한 여부를 결정한다. False로 지정한 경우에는 insert, update, delete 등으로 내용이 변경됐을 때, 수동적으로 commit을 진행해주어야 한다. 
+# autocommit을 비활성화하는 이유는 데이터 변경 작업을 사용할 경우 여러 줄의 SQL쿼리를 사용했을 때 한번에 반영시키기 위함. 
 # autoflush : 호출되면서 commit 되지 않은 부분의 내역을 삭제할 시의 여부를 정하는 부분.
 # bind : 어떤 엔진을 통해 DB 연결을 할 지 결정하는 부분. 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
