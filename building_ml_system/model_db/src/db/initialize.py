@@ -6,6 +6,8 @@ logger = getLogger(__name__)
 
 def create_tables(engine, checkfirst: bool = True):
     logger.info("Initialize tables if not exist.")
+    # Create all tables stored in this metadata.
+
     Base.metadata.create_all(engine, checkfirst=checkfirst)
 
 def initialize_table(engine, checkfirst: bool = True):
